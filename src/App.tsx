@@ -1,26 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import OneNote from "components/OneNote";
+import React from "react";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import AllNotes from "./components/AllNotes";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => (
+  <BrowserRouter basename={import.meta.env.PUBLIC_URL}>
+    <Switch>
+      <Route exact path="/notes" component={AllNotes} />
+      <Route exact path="/notes/:id" component={OneNote} />
+      <Redirect from="/" to="/notes" />
+    </Switch>
+  </BrowserRouter>
+);
 
 export default App;
