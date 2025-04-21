@@ -1,7 +1,6 @@
 import { createTheme, styled, ThemeProvider } from "@mui/material";
-import React from "react";
-
 import NotesProvider from "components/NotesProvider/NotesProvider";
+import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import AllNotes from "./components/AllNotes";
 import Login from "./components/Login";
