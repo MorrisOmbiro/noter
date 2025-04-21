@@ -11,7 +11,7 @@ const NoteDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [note, setNote] = React.useState<Note | undefined>();
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(undefined);
+  const token = localStorage.getItem("token");
 
   const handleBackButtonClick = () => {
     window.history.back();
@@ -21,11 +21,10 @@ const NoteDetails: React.FC = () => {
     const fetchNote = async () => {
       try {
         setLoading(true);
-        const response = await getNoteById(id as string);
+        const response = await getNoteById(id as string, token as string);
         setNote(response);
         setLoading(false);
       } catch (e) {
-        setError(e as any);
         console.error("failed to get note details: ", e);
       }
     };

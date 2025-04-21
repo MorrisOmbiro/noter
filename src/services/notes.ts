@@ -1,15 +1,23 @@
 import { FilterQueryParams, Note } from "types";
 
-export const getNotes = async (query: FilterQueryParams): Promise<Note[]> => {
+const getHeaders = (token: string) => ({
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+});
+
+export const getNotes = async (
+  query: FilterQueryParams,
+  token: string
+): Promise<Note[]> => {
   const queryString = new URLSearchParams(
     query as Record<string, string>
   ).toString();
 
   const response = await fetch(`http://localhost:5000/note?${queryString}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    ...getHeaders(token),
   });
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -22,12 +30,10 @@ export const getNotes = async (query: FilterQueryParams): Promise<Note[]> => {
     id: note._id,
   })) as Note[];
 };
-export const createNote = async (note: Partial<Note>) => {
+export const createNote = async (note: Partial<Note>, token: string) => {
   const response = await fetch("http://localhost:5000/note", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    ...getHeaders(token),
     body: JSON.stringify(note),
   });
   if (!response.ok) {
@@ -36,12 +42,10 @@ export const createNote = async (note: Partial<Note>) => {
   return response.json();
 };
 
-export const updateNote = async (note: Partial<Note>) => {
+export const updateNote = async (note: Partial<Note>, token: string) => {
   const response = await fetch(`http://localhost:5000/note/${note.id}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    ...getHeaders(token),
     body: JSON.stringify(note),
   });
   if (!response.ok) {
@@ -50,9 +54,10 @@ export const updateNote = async (note: Partial<Note>) => {
   return response.json();
 };
 
-export const deleteNote = async (id: string) => {
+export const deleteNote = async (id: string, token: string) => {
   const response = await fetch(`http://localhost:5000/note/${id}`, {
     method: "DELETE",
+    ...getHeaders(token),
   });
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -60,9 +65,11 @@ export const deleteNote = async (id: string) => {
   return response.json();
 };
 
-export const getNoteById = async (id: string): Promise<Note> => {
-  console.log("id: ", id);
-  const response = await fetch(`http://localhost:5000/note/${id}`);
+export const getNoteById = async (id: string, token: string): Promise<Note> => {
+  const response = await fetch(`http://localhost:5000/note/${id}`, {
+    method: "GET",
+    ...getHeaders(token),
+  });
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }

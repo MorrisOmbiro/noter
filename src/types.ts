@@ -6,6 +6,7 @@ export interface Note {
   category: NoteCategoryName;
   pinned: boolean;
   content: string;
+  userId: string;
   dateCreated: Date;
   dateUpdated: Date;
 }
@@ -38,6 +39,7 @@ export interface FilterQueryParams {
   category?: NoteCategoryName;
   pinned?: boolean;
   favorite?: boolean;
+  userId?: string;
   dateCreated?: Date;
   dateUpdated?: Date;
   content?: string;
@@ -45,4 +47,19 @@ export interface FilterQueryParams {
   offset?: number;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
+}
+
+export interface User {
+  _id: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface Registration {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
 }

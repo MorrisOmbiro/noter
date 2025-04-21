@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 server/node_modules
+
+# don't include config.env in server
+config.env

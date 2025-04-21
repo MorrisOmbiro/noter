@@ -23,6 +23,8 @@ import { NoteCategoryName, NoteForm } from "types";
 const NoteField: React.FC = () => {
   const { currentNoteAction, notes, setCurrentNoteAction, refetchNotes } =
     useNotesContext();
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") as string);
   const currentNote = notes.find((note) => note.id === currentNoteAction.id);
 
   const [title, setTitle] = React.useState("");
@@ -44,13 +46,15 @@ const NoteField: React.FC = () => {
   React.useEffect(() => {
     const update = async () => {
       if (currentNoteAction.action === NoteAction.FAVORITE && currentNote) {
-        console.log("currentNote?.favorite: ", currentNote?.favorite);
-        await updateNote({
-          id: currentNoteAction.id as string,
-          ...(currentNote as NoteForm),
-          favorite:
-            currentNote?.favorite === null ? true : !currentNote?.favorite,
-        });
+        await updateNote(
+          {
+            id: currentNoteAction.id as string,
+            ...(currentNote as NoteForm),
+            favorite:
+              currentNote?.favorite === null ? true : !currentNote?.favorite,
+          },
+          token as string
+        );
         refetchNotes();
       }
     };
@@ -77,21 +81,29 @@ const NoteField: React.FC = () => {
         return;
       }
       if (currentNoteAction.action === NoteAction.CREATE) {
-        await createNote({
-          title,
-          content,
-          tags: tags.split(",").map((tag) => tag.trim()),
-          category,
-        });
+        await createNote(
+          {
+            title,
+            content,
+            tags: tags.split(",").map((tag) => tag.trim()),
+            category,
+            userId: user?._id,
+          },
+          token as string
+        );
       } else {
-        await updateNote({
-          id: currentNoteAction.id as string,
-          ...(currentNote as NoteForm),
-          title,
-          content,
-          tags: tags.split(",").map((tag) => tag.trim()),
-          category,
-        });
+        await updateNote(
+          {
+            id: currentNoteAction.id as string,
+            ...(currentNote as NoteForm),
+            title,
+            content,
+            tags: tags.split(",").map((tag) => tag.trim()),
+            category,
+            userId: user?._id,
+          },
+          token as string
+        );
       }
     } catch (error) {
       console.error("Error creating note:", error);
@@ -150,7 +162,7 @@ const NoteField: React.FC = () => {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Box display="flex" flexDirection="column" gap={2}>
-              <InputLabel id="category">Title</InputLabel>
+              <InputLabel id="title">Title</InputLabel>
               <TextField
                 name="title"
                 variant="outlined"
@@ -159,7 +171,7 @@ const NoteField: React.FC = () => {
                 onChange={handleTitleChange}
                 value={title}
               />
-              <InputLabel id="category">Content</InputLabel>
+              <InputLabel id="content">Content</InputLabel>
               <TextField
                 name="content"
                 variant="outlined"
@@ -171,7 +183,7 @@ const NoteField: React.FC = () => {
                 value={content}
               />
 
-              <InputLabel id="category">Tags</InputLabel>
+              <InputLabel id="tags">Tags</InputLabel>
               <TextField
                 aria-label="tags"
                 variant="outlined"

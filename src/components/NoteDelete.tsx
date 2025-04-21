@@ -16,6 +16,7 @@ import { DEFAULT_NOTE_ACTION, NoteAction } from "./NotesProvider/Context";
 const NoteDelete: React.FC = () => {
   const { notes, currentNoteAction, setCurrentNoteAction, refetchNotes } =
     useNotesContext();
+  const token = localStorage.getItem("token");
   const currentNote = notes.find(
     (note) => note.id === currentNoteAction.id
   ) as Note;
@@ -24,7 +25,7 @@ const NoteDelete: React.FC = () => {
   };
   const handleDelete = async () => {
     try {
-      await deleteNote(currentNoteAction.id as string);
+      await deleteNote(currentNoteAction.id as string, token as string);
     } catch (error) {
       console.error("Error deleting note:", error);
     }

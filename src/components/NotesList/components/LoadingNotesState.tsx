@@ -8,8 +8,8 @@ interface Props {
 const LoadingNotesState: React.FC<Props> = ({ cardCount = 1 }) => {
   return (
     <Box sx={{ width: "100%", maxWidth: "800px" }}>
-      {Array.from({ length: cardCount }).map(() => (
-        <Card sx={{ marginBottom: "16px" }}>
+      {Array.from({ length: cardCount }).map((_, idx) => (
+        <Card sx={{ marginBottom: "16px" }} key={idx}>
           <CardHeader
             title={<Skeleton variant="text" width="60%" height={30} />}
             action={<Skeleton variant="circular" width={40} height={40} />}

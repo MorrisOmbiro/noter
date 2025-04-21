@@ -9,6 +9,7 @@ import { Context, CurrentNoteAction, DEFAULT_NOTE_ACTION } from "./Context";
 const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const token = localStorage.getItem("token");
   const [notes, setNotes] = React.useState<Note[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -26,7 +27,7 @@ const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
     const fetchNotes = async () => {
       try {
         setLoading(true);
-        const response = await getNotes(params);
+        const response = await getNotes(params, token as string);
         setNotes(response);
         setLoading(false);
       } catch (error) {
@@ -36,11 +37,12 @@ const NotesProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
 
-    if (refresh) {
+    console.log("token: ", token);
+    if (refresh && token) {
       fetchNotes();
       setRefresh(false);
     }
-  }, [refresh, params]);
+  }, [refresh, params, token]);
 
   React.useEffect(() => {
     const newParams = queryString.parse(location.search);

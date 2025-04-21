@@ -96,6 +96,12 @@ const NoteCard: React.FC<NoteCardProps> = ({
         }
       />
       <CardContent>
+        {!collapsed && (
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            {note.content.split("\n")[0]}...
+          </Typography>
+        )}
+
         <Collapse in={collapsed}>
           <Typography variant="body1" color="text.secondary" gutterBottom>
             {note.content}
@@ -131,7 +137,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
               display="block"
               gutterBottom
             >
-              Updated: {new Date(note.dateUpdated).toLocaleString()}
+              Last updated: {new Date(note.dateUpdated).toLocaleString()}
             </Typography>
           </Grid>
           <Grid item>
